@@ -1,0 +1,6 @@
+node_modules/
+lib/*
+!.gitkeep
+.nyc_output/
+/coverage/
+/.tmp

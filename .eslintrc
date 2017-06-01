@@ -1,0 +1,45 @@
+{
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaVersion": 7,
+    "sourceType": "module"
+  },
+  "env": {
+    "node": true
+  },
+  "plugins": [
+    "immutable"
+  ],
+  "extends": [
+    "eslint:recommended",
+    "plugin:import/errors",
+    "plugin:import/warnings"
+  ],
+  "globals": {
+    "Promise": false
+  },
+  "settings": {
+    "import/ignore": [
+      "node_modules"
+    ],
+    "import/external-module-folders": [
+      "node_modules",
+      "./"
+    ],
+    "import/resolver": {
+      "node": {
+        "extensions": [
+          ".js"
+        ],
+        "moduleDirectory": [
+          "node_modules"
+        ]
+      }
+    }
+  },
+  "rules": {
+    "immutable/no-let": 2,
+    "immutable/no-this": 2,
+    "immutable/no-mutation": 2
+  }
+}

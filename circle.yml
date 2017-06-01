@@ -1,0 +1,15 @@
+machine:
+  node:
+    version: 6.3.0
+  pre:
+    - mkdir ~/.yarn-cache
+
+dependencies:
+  cache_directories:
+    - "~/.yarn-cache"
+  override:
+    - yarn
+
+test:
+  post:
+    - $(npm bin)/codecov

@@ -1,0 +1,15 @@
+{
+    "extends": "tslint:recommended",
+    "rules": {
+      "quotemark": [true, "double", "jsx-double", "avoid-escape"],
+      "trailing-comma": [
+        true,
+        {
+          "multiline": "never",
+          "singleline": "never"
+        }
+      ]
+    },
+    "jsRules": {
+    }
+}
