@@ -1,11 +1,33 @@
 import { Observable, Scheduler, Subscription } from "rxjs";
 import { IScheduler } from "rxjs/Scheduler";
 
+export interface IConfig {
+  bufferSize?: number;
+  raiseOnOverflow?: boolean;
+  windowSize: number;
+}
+
+const normalizeConfig = (delayOrConfig: number | IConfig): IConfig => {
+  if (typeof delayOrConfig === "number") {
+    return {
+      bufferSize: null,
+      raiseOnOverflow: false,
+      windowSize: delayOrConfig
+    };
+  }
+
+  return Object.assign(
+    {},
+    { bufferSize: null, raiseOnOverflow: false },
+    delayOrConfig
+  );
+};
+
 function throttleOp<T>(
-  delay: number,
-  scheduler: IScheduler
+  delayOrConfig: number | IConfig,
+  scheduler: IScheduler = Scheduler.async
 ) {
-  scheduler = scheduler || Scheduler.async;
+  const config: IConfig = normalizeConfig(delayOrConfig);
 
   return new Observable((observer) => {
     let done: boolean = false;
@@ -21,6 +43,14 @@ function throttleOp<T>(
       }
     };
 
+    const raise = () => observer.error({
+      data: {
+        config
+      },
+      message: "Buffer overflow",
+      source: "rx-op-lossless-throttle"
+    });
+
     const group = new Subscription();
 
     group.add(this.subscribe(
@@ -28,15 +58,24 @@ function throttleOp<T>(
         const delta = scheduler.now() - lastEmissionAt;
 
         if (lastEmissionAt == null ||
-           delta > delay) {
+           delta > config.windowSize) {
           emit(value);
+          return;
+        }
+
+        if (config.bufferSize !== null &&
+            buffered >= config.bufferSize) {
+          if (config.raiseOnOverflow) {
+            raise();
+          }
+
           return;
         }
 
         buffered ++;
         scheduler.schedule(
           () => { buffered--; emit(value); },
-          lastEmissionAt + delay * buffered - scheduler.now()
+          lastEmissionAt + config.windowSize * buffered - scheduler.now()
         );
       },
       observer.error.bind(observer),
@@ -53,8 +92,8 @@ function throttleOp<T>(
 }
 
 const throttleLet = <T>(
-  delay: number,
-  scheduler: IScheduler
+  delay: number | IConfig,
+  scheduler?: IScheduler
 ) => (
   source: Observable<T>
 ): Observable<T> => {
