@@ -1,6 +1,6 @@
 {
   "name": "rx-op-lossless-throttle",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Lossless rate limiting operator for RxJS",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -12,6 +12,7 @@
   "author": "Konstantin Burnaev",
   "license": "ISC",
   "dependencies": {
+    "core-js": "^2.4.1",
     "rxjs": "^5.4.0"
   },
   "repository": {
@@ -20,6 +21,7 @@
   },
   "devDependencies": {
     "@types/chai": "^3.5.2",
+    "@types/core-js": "^0.9.42",
     "@types/mocha": "^2.2.41",
     "@types/sinon": "^2.2.1",
     "@types/sinon-chai": "^2.7.27",

@@ -1,3 +1,4 @@
+import * as Obj from "core-js/library/es6/object";
 import { Observable, Scheduler, Subscription } from "rxjs";
 import { IScheduler } from "rxjs/Scheduler";
 
@@ -16,7 +17,7 @@ const normalizeConfig = (delayOrConfig: number | IConfig): IConfig => {
     };
   }
 
-  return Object.assign(
+  return Obj.assign(
     {},
     { bufferSize: null, raiseOnOverflow: false },
     delayOrConfig
